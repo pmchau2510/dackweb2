@@ -5,8 +5,10 @@ const fs = require('fs-extra')
 const resizeImg = require('resize-img')
 const Product = require('../models/product')
 const Category = require('../models/category')
+const auth = require('../config/auth')
+const isAdmin = auth.isAdmin
 // Get products index
-router.get('/', (req, res) => {
+router.get('/', isAdmin, (req, res) => {
     var count
     Product.count((err, c) => {
         count = c
@@ -20,7 +22,7 @@ router.get('/', (req, res) => {
 })
 
 // Get add product
-router.get('/add-product', (req, res) => {
+router.get('/add-product', isAdmin, (req, res) => {
     var title = ""
     var desc = ""
     var price = ""
@@ -119,7 +121,7 @@ router.post('/add-product', (req, res) => {
 
 
 // Get edit product
-router.get('/edit-product/:id', (req, res) => {
+router.get('/edit-product/:id', isAdmin, (req, res) => {
 
     var errors
 
@@ -252,7 +254,7 @@ router.post('/product-gallery/:id', (req, res) => {
 })
 
 // Get delete image
-router.get('/delete-image/:image', (req, res) => {
+router.get('/delete-image/:image', isAdmin, (req, res) => {
     var originalImage = 'public/product_images/' + req.query.id + '/gallery/' + req.params.image
     var thumbsImage = 'public/product_images/' + req.query.id + '/gallery/thumbs/' + req.params.image
     fs.remove(originalImage, (err) => {
@@ -271,7 +273,7 @@ router.get('/delete-image/:image', (req, res) => {
 })
 
 // Get delete product
-router.get('/delete-product/:id', (req, res) => {
+router.get('/delete-product/:id', isAdmin, (req, res) => {
     var id = req.params.id
     var path = 'public/product_image/' + id
     fs.remove(path, (err) => {
